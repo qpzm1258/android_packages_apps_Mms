@@ -41,6 +41,9 @@ import com.android.mms.data.ContactList;
 import com.android.mms.data.Conversation;
 import com.android.mms.util.SmileyParser;
 
+import android.mokee.location.PhoneLocation;
+import android.mokee.util.MoKeeUtils;
+
 /**
  * This class manages the view for given conversation.
  */
@@ -55,6 +58,7 @@ public class ConversationListItem extends RelativeLayout implements Contact.Upda
     private View mAttachmentView;
     private View mErrorIndicator;
     private QuickContactBadge mAvatarView;
+    private TextView mLocationView;
 
     static private Drawable sDefaultContactImage;
 
@@ -88,6 +92,7 @@ public class ConversationListItem extends RelativeLayout implements Contact.Upda
         mAttachmentView = findViewById(R.id.attachment);
         mErrorIndicator = findViewById(R.id.error);
         mAvatarView = (QuickContactBadge) findViewById(R.id.avatar);
+	mLocationView = (TextView) findViewById(R.id.location);
     }
 
     public Conversation getConversation() {
@@ -202,6 +207,11 @@ public class ConversationListItem extends RelativeLayout implements Contact.Upda
 
         // Register for updates in changes of any of the contacts in this conversation.
         ContactList contacts = conversation.getRecipients();
+
+        if (MoKeeUtils.isChineseLanguage()) { 
+	    mLocationView.setText(PhoneLocation.getCityFromPhone(contacts.get(0).getNumber())); 
+	} 
+
 
         if (Log.isLoggable(LogTag.CONTACT, Log.DEBUG)) {
             Log.v(TAG, "bind: contacts.addListeners " + this);
